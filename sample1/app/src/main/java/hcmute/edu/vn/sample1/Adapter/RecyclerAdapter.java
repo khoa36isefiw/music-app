@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -25,19 +27,26 @@ import hcmute.edu.vn.sample1.R;
 import hcmute.edu.vn.sample1.model.song;
 
 //adapter để set up dữ liệu lên từng list_item
-public class RecyclerAdapter extends FirebaseRecyclerAdapter<song,RecyclerAdapter.myViewHolder> {
+public class RecyclerAdapter extends FirebaseRecyclerAdapter<song,RecyclerAdapter.myViewHolder> implements Filterable {
 
     private Context mContext;
-    static ArrayList<song> songList ;
-    List<song> mListSong;
+    static ArrayList<song> songList ;   // xét lên Adapter
+    ArrayList<song> songListOld ;   // biến trung gian
+
+    ArrayList<song> songItem ;
+
+    public void setSongItem(ArrayList<song> songItem) {
+        this.songItem = songItem;
+        notifyDataSetChanged();
+    }
 
 
-
-    public RecyclerAdapter(Context mContext,@NonNull FirebaseRecyclerOptions<song> options, ArrayList<song> songlist) {
+    public RecyclerAdapter(Context mContext, @NonNull FirebaseRecyclerOptions<song> options, ArrayList<song> mmsonglist) {
 
         super(options);
         this.mContext = mContext;
-        this.songList = songlist;
+        this.songList = mmsonglist;
+        this.songListOld = songList;        // để duyệt qua vòng for tìm key word
 
     }
 
@@ -50,6 +59,8 @@ public class RecyclerAdapter extends FirebaseRecyclerAdapter<song,RecyclerAdapte
                 .into(holder.img_look_thumbnail);
         holder.songName.setText(model.getSongName());
         holder.artistName.setText(model.getSongArtist());
+        //holder.songDuration.setText(model.getSongduration());
+
         int index = position;
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -74,12 +85,55 @@ public class RecyclerAdapter extends FirebaseRecyclerAdapter<song,RecyclerAdapte
 
 
 
+    @Override
+    public Filter getFilter() {
+        return new Filter() {
+            @Override
+            protected FilterResults performFiltering(CharSequence constraint) {
+                // key words search in searchView
+                String strSearch = constraint.toString();
+
+                //loc du lieu phu hop voi du lieu nay
+                if (strSearch.isEmpty()) {      // chưa điền text or không có tên bài hát
+                    songList = songListOld;
+
+                } else { // tìm ra những list songs có chứa kí tự trong search
+                    ArrayList<song> list = new ArrayList<>();
+                    //check bai nhac nao co ky tu ma ta search
+                        for (song songss : songListOld) {
+
+                            // kiểm tra thằng nào có ký tự giống trong ô search --> bỏ vào list
+                            if (songss.getSongName().toLowerCase().contains(strSearch.toLowerCase())) {
+                                list.add(songss);
+                            }
+                        }
+                    songList = list;
+                }
+
+                FilterResults filterResults = new FilterResults();
+                filterResults.values = songList;
+                return filterResults;
+            }
+
+            @Override
+            protected void publishResults(CharSequence constraint, FilterResults results) {
+                songList = (ArrayList<song>) results.values;
+
+                notifyDataSetChanged();
+            }
+        };
+    }
+
+
+
+
+
 
 
     // hàm để set giá trị cho từng item trong list
     public class myViewHolder extends RecyclerView.ViewHolder {
 
-        TextView songName, artistName;
+        TextView songName, artistName, songDuration;
         ImageView img_look_thumbnail;
         CardView cardView;
 
@@ -90,6 +144,7 @@ public class RecyclerAdapter extends FirebaseRecyclerAdapter<song,RecyclerAdapte
             img_look_thumbnail = itemView.findViewById(R.id.songImg);
             cardView = itemView.findViewById(R.id.card_view_id);
             artistName = itemView.findViewById(R.id.txtArtist);
+            //songDuration = itemView.findViewById(R.id.textViewtimetotal);
         }
     }
 

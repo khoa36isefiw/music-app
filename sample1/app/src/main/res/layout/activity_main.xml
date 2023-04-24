@@ -21,6 +21,13 @@
         android:layout_height="wrap_content"
         android:src="@drawable/ic_baseline_cloud_upload_48" />
 
+    <androidx.appcompat.widget.SearchView
+        android:id="@+id/search"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+
+        />
 
 
 </LinearLayout>

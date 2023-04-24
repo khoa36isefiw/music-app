@@ -2,9 +2,12 @@ package hcmute.edu.vn.sample1;
 
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -18,11 +21,13 @@ import android.Manifest;       /*
             WRITE_EXTERNAL_STORAGE
 */
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -85,10 +90,13 @@ public class MainActivity extends AppCompatActivity  {
     private Button btnUploadSong;
     String songName, songUrl, songArtist, imgeUrl;
 
+    private SearchView searchView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
 
 
         recyclerView = (RecyclerView)findViewById(R.id.listView);
@@ -103,12 +111,33 @@ public class MainActivity extends AppCompatActivity  {
                         .build();
         recyclerAdapter = new RecyclerAdapter(getApplicationContext(),options,getAllAudioOnline());
         recyclerView.setAdapter(recyclerAdapter);
+
         validatePermision();
         //uploadSongToFirebaseStorage();
 
 
+
+
+
+
     }
 
+
+    private void filterList(String text) {
+        ArrayList<song> filteredSong = new ArrayList<>();
+        for (song item : getAllAudioOnline2()) {
+            if(item.getSongName().toLowerCase().contains(text.toLowerCase())) {
+                filteredSong.add(item);
+            }
+        }
+
+        if (filteredSong.isEmpty()){
+            Toast.makeText(this, "Luan Khung", Toast.LENGTH_SHORT).show();
+        }
+        else {
+            recyclerAdapter.setSongItem(filteredSong);
+        }
+    }
 
     private ArrayList<song> getAllAudioOnline() {
         ArrayList<song> tempAudioList = new ArrayList<>();
@@ -130,6 +159,27 @@ public class MainActivity extends AppCompatActivity  {
         });
         return tempAudioList;
     }
+
+    private  ArrayList<song> getAllAudioOnline2() {
+        ArrayList<song> tempAudioList = new ArrayList<>();
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference("Audio");
+        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    song musicFiles1 = dataSnapshot.getValue(song.class);
+                    //Log.e("file from firebase: ", musicFiles1.getSongName());
+                    tempAudioList.add(musicFiles1);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+                //Log.e(TAG, "onCancelled", databaseError.toException());
+            }
+        });
+        return tempAudioList;
+    }
     @Override
     protected void onStart() {
         super.onStart();
@@ -142,10 +192,32 @@ public class MainActivity extends AppCompatActivity  {
         recyclerAdapter.stopListening();
     }
 
+
+    // search filter
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.app_menu, menu);
+
+        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+        searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
+
+        searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+        searchView.setMaxWidth(Integer.MAX_VALUE);
+
+//        // Thiết lập OnQueryTextListener cho SearchView
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                recyclerAdapter.getFilter().filter(query);
+                return false;
+            }
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                recyclerAdapter.getFilter().filter(newText);
+                return true;
+            }
+        });
         return true;
     }
 
@@ -157,6 +229,34 @@ public class MainActivity extends AppCompatActivity  {
                 Intent intent = new Intent(this, hcmute.edu.vn.sample1.model.UploadSongActivity.class);
                 startActivity(intent);
             }
+        }
+        else if(item.getItemId() == R.id.action_search) {
+            SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+            //searchView = (SearchView) item.findItem(R.id.action_search).getActionView();
+
+
+            searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+            searchView.setMaxWidth(Integer.MAX_VALUE);
+
+
+
+//        // Thiết lập OnQueryTextListener cho SearchView
+            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                @Override
+                public boolean onQueryTextSubmit(String query) {
+                    recyclerAdapter.getFilter().filter(query);
+                    return false;
+                }
+
+                @Override
+                public boolean onQueryTextChange(String newText) {
+                    recyclerAdapter.getFilter().filter(newText);
+                    return true;
+                }
+            });
+
+
+
         }
 
         return super.onOptionsItemSelected(item);
@@ -259,7 +359,5 @@ public class MainActivity extends AppCompatActivity  {
 
 
     }
-
-
 
 }
