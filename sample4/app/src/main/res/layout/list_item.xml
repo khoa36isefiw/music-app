@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_marginEnd="8dp"
+    android:layout_marginTop="8dp"
+    android:layout_marginStart="8dp"
+    android:elevation="8dp"
+    app:cardUseCompatPadding="true"
+    android:id="@+id/card_view_id">
+
+    <!--set up từng item -->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="15dp"
+        android:background="@drawable/item_bg"
+        >
+        <ImageView
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:id="@+id/songImg"
+            android:layout_centerVertical="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginEnd="5dp"
+            android:layout_marginStart="5dp"
+            android:background="@drawable/item_bg"
+            />
+        <!--icon cho từng item-->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="45dp"
+            android:id="@+id/txtSong"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="5dp"
+            android:layout_toEndOf="@+id/songImg"
+            android:textColor="#FFFFFF"
+            android:text="Song name"
+            android:textSize="18dp"
+            android:singleLine="true"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:ellipsize="marquee"
+            android:scrollHorizontally="true"/>
+        <!--marqueeRepeatLimit: chayj chuwx trên item -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Artist"
+            android:id="@+id/txtArtist"
+            android:textSize="15dp"
+            android:layout_marginStart="5dp"
+            android:layout_marginEnd="5dp"
+            android:layout_toEndOf="@+id/songImg"
+            android:layout_marginTop="25dp"
+            />
+
+
+    </RelativeLayout>
+
+</androidx.cardview.widget.CardView>
