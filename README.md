@@ -7,5 +7,5 @@ Based on the concepts learned, the team tried to create a simple music player ap
 
 List of members participating in the project:
 	- Phan Thanh Luan
-  - Huynh Quoc Thoai
-  - Huynh Dang Khoa
+	- Huynh Quoc Thoai
+	- Huynh Dang Khoa
