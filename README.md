@@ -6,6 +6,6 @@ Based on the concepts learned, the team tried to create a simple music player ap
 4) Use Services in your project (Foreground Service, Notification).
 
 List of members participating in the project:
-	- Phan Thanh Luan
-	- Huynh Quoc Thoai
-	- Huynh Dang Khoa
+- Phan Thanh Luan
+- Huynh Quoc Thoai
+- Huynh Dang Khoa
