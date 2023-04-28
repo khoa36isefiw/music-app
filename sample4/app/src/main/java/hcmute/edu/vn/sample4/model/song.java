@@ -8,6 +8,7 @@ public class song implements Serializable {
     private String songname;
     private String songurl;
 
+    private String songduration;
     @Override
     public String toString() {
         return "song{" +
@@ -28,6 +29,14 @@ public class song implements Serializable {
         this.songname = songName;
         this.songartist = songArtist;
         this.songurl = songURL;
+    }
+
+    public song(String imageurl, String songName, String songArtist, String songURL, String songDuration) {
+        this.imageurl = imageurl;
+        this.songname = songName;
+        this.songartist = songArtist;
+        this.songurl = songURL;
+        this.songduration = songDuration;
     }
 
     public String getImageurl() {
@@ -60,5 +69,13 @@ public class song implements Serializable {
 
     public void setSongURL(String songURL) {
         this.songurl = songURL;
+    }
+
+    public String getSongduration() {
+        return songduration;
+    }
+
+    public void setSongduration(String songduration) {
+        this.songduration = songduration;
     }
 }

@@ -1,6 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
     <item android:id="@+id/menu_tab_1" android:title="Home" android:icon="@drawable/icontrangchu"/>
     <item android:id="@+id/menu_tab_2" android:title="Search" android:icon="@drawable/iconsearch"/>
     <item android:id="@+id/menu_tab_3" android:title="Library" android:icon="@drawable/iconthuvien"/>
+
+    <item android:id="@+id/uploadItem"
+        android:title="uploadSong"
+        app:showAsAction="always"
+        android:icon="@drawable/ic_baseline_cloud_upload_48"/>
+
+
 </menu>

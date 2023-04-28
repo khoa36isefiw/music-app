@@ -109,6 +109,7 @@
         android:layout_marginTop="24dp"
         android:layout_marginEnd="16dp"
         android:progressTint="#FFFFFF"
+        android:secondaryProgressTint="@color/colorPrimary"
         android:thumb="@drawable/thumb" />
 
     <RelativeLayout
@@ -159,7 +160,7 @@
             android:background="@null"
             android:contentDescription="@string/random"
             android:scaleType="fitXY"
-            app:srcCompat="@drawable/iconsuffle" />
+            app:srcCompat="@drawable/ic_baseline_shuffle_24" />
 
         <ImageButton
             android:id="@+id/imageButtonpreview"
@@ -206,6 +207,6 @@
             android:background="@null"
             android:contentDescription="@string/repeat"
             android:scaleType="fitXY"
-            app:srcCompat="@drawable/iconrepeat" />
+            app:srcCompat="@drawable/ic_baseline_repeat_24" />
     </RelativeLayout>
 </RelativeLayout>
